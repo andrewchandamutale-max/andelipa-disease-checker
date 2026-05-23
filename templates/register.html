@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Register | Welcome To Andelipa Disease Checker Tool</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="auth-body">
+
+<!-- =========================
+     LOADING SCREEN
+========================= -->
+<div id="loading-screen">
+
+    <div class="loader-box">
+
+        <div class="medical-loader"></div>
+
+        <h1 style="margin-top:20px;">
+            🧠 Andelipa Disease Checker Tool
+        </h1>
+
+        <p style="margin-top:10px;">
+            Preparing Registration System...
+        </p>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+<div id="main-content" style="display:none;">
+
+    <div class="auth-container">
+
+        <!-- =========================
+             LEFT SIDE
+        ========================= -->
+        <div class="auth-left">
+
+            <div class="badge">
+                🏥 AI Hospital Registration
+            </div>
+
+            <h1>
+                Create Your Medical Account
+            </h1>
+
+            <p class="desc">
+
+                Join the smart medical diagnosis system
+                powered by AI technology.
+
+                <br><br>
+
+                ✔ Smart Disease Detection
+                <br>
+                ✔ Emergency Medical Alerts
+                <br>
+                ✔ AI Symptom Analysis
+                <br>
+                ✔ Secure Health Dashboard
+
+            </p>
+
+            <div class="features">
+
+                <div class="feature">
+                    🧠 Intelligent Diagnosis
+                </div>
+
+                <div class="feature">
+                    🚨 Emergency Detection
+                </div>
+
+                <div class="feature">
+                    🔒 Secure Patient Access
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- =========================
+             RIGHT SIDE
+        ========================= -->
+        <div class="auth-right">
+
+            <div class="login-card">
+
+                <div class="icon">
+                    🏥
+                </div>
+
+                <h2>
+                    Register
+                </h2>
+
+                <p class="sub">
+                    Create your AI medical account
+                </p>
+
+                <!-- REGISTER FORM -->
+                <form method="POST">
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Enter Username"
+                        required
+                    >
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter Password"
+                        required
+                    >
+
+                    <button type="submit">
+                        Create Account
+                    </button>
+
+                </form>
+
+                <!-- LOGIN LINK -->
+                <p class="link">
+
+                    Already have an account?
+
+                    <a href="/">
+                        Login
+                    </a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     LOADING SCRIPT
+========================= -->
+<script>
+
+window.onload = function(){
+
+    setTimeout(function(){
+
+        document.getElementById("loading-screen").style.opacity = "0";
+
+        setTimeout(function(){
+
+            document.getElementById("loading-screen").style.display = "none";
+
+            document.getElementById("main-content").style.display = "flex";
+
+        }, 800);
+
+    }, 2000);
+
+}
+
+</script>
+
+</body>
+</html>

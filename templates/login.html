@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Andelipa Disease Checker Tool</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="auth-body">
+
+<!-- =========================
+TOP LOADER
+========================= -->
+<div id="top-loader"></div>
+
+<!-- =========================
+LOADING SCREEN
+========================= -->
+<div id="loading-screen">
+
+    <div class="loader-box">
+
+        <div class="medical-loader"></div>
+
+        <h1>🧠 ANDELIPA DISEASE CHECKER TOOL</h1>
+
+        <p class="loading-text">
+            Kindly Wait while the System Loads...This will take about 5s
+        </p>
+
+        <p class="credit">
+            Built by Andrew Chanda
+        </p>
+
+        <p class="credit">
+            Supported By Teacher Zelipa C Mwale
+        </p>
+
+    </div>
+
+</div>
+
+<!-- =========================
+MAIN CONTENT
+========================= -->
+<div id="main-content" style="display:none;">
+
+    <div class="auth-container">
+
+        <!-- =========================
+        LEFT SIDE
+        ========================= -->
+        <div class="auth-left">
+
+            
+
+            <h1>
+                ANDELIPA DISEASE CHECKER TOOL
+            </h1>
+
+            <p class="desc">
+
+                Smart AI-powered disease diagnosis system
+                designed to analyze symptoms,
+                detect emergencies,
+                and provide medical recommendations.
+
+            </p>
+
+            <div class="features">
+
+                <div class="feature">
+                    🧠 Smart Disease Detection
+                </div>
+
+                <div class="feature">
+                    🚨 Emergency Alerts
+                </div>
+
+                <div class="feature">
+                    💬 AI Medical Assistant
+                </div>
+
+                <div class="feature">
+                    🏥 Hospital Recommendation System
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- =========================
+        RIGHT SIDE LOGIN
+        ========================= -->
+        <div class="auth-right">
+
+            <div class="login-card">
+
+                <div class="icon">
+                    🧠
+                </div>
+                <h2>Login</h2>
+
+{% if error %}
+
+<div class="error-box">
+    {{ error }}
+</div>
+
+{% endif %}
+
+                <h2>Welcome Back</h2>
+
+                <p class="sub">
+                    Login to continue
+                </p>
+
+                <form method="POST">
+
+                   <div class="password-box">
+
+ <form method="POST">
+
+    <!-- USERNAME -->
+
+    <input
+        type="text"
+        name="username"
+        placeholder="Enter Username"
+        required
+    >
+
+    <!-- PASSWORD -->
+
+    <div class="password-box">
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter Password"
+            required
+        >
+
+        <span onclick="togglePassword()" class="eye-btn">
+            👁️
+        </span>
+
+    </div>
+
+    <!-- BUTTON -->
+<button type="submit" id="login-btn">
+    🔐 Login
+</button>
+
+</form>
+
+                </form>
+
+                <p class="link">
+
+                    Don't have an account?
+
+                    <a href="/register">
+
+                        Register
+
+                    </a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+LOADING SCRIPT
+========================= -->
+<script>
+
+window.onload = function(){
+
+    let loader = document.getElementById("top-loader");
+
+    loader.style.width = "100%";
+
+    setTimeout(function(){
+
+        loader.style.display = "none";
+
+    }, 5000);
+
+}
+
+/* Loading Screen Animation */
+
+setTimeout(function(){
+
+    document.getElementById("loading-screen").style.opacity = "0";
+
+    setTimeout(function(){
+
+        document.getElementById("loading-screen").style.display = "none";
+
+        document.getElementById("main-content").style.display = "flex";
+
+    }, 5000);
+
+}, 2500);
+
+</script>
+<script>
+
+function togglePassword(){
+
+    let password =
+        document.getElementById("password");
+
+    if(password.type === "password"){
+
+        password.type = "text";
+
+    }else{
+
+        password.type = "password";
+    }
+}
+
+</script>
+<script>
+
+document.querySelector("form")
+.addEventListener("submit", function(event){
+
+    event.preventDefault();
+
+    let btn =
+        document.getElementById("login-btn");
+
+    btn.innerHTML =
+        "⏳ Logging in...";
+
+    btn.disabled = true;
+
+    setTimeout(() => {
+
+        event.target.submit();
+
+    }, 4000);
+
+});
+
+</script>
+</body>
+</html>

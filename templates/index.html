@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Andelipa Disease Checker Tool</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<div id="ai-loader">
+
+    <div class="loader-box">
+
+        <h2>🧠 Processing your request...</h2>
+
+        <p id="loader-text">0%</p>
+
+        <div class="bar">
+            <div id="bar-fill"></div>
+        </div>
+
+    </div>
+
+</div>
+<audio id="scan-sound" src="{{ url_for('static', filename='sounds/scan.mp3') }}" preload="auto"></audio>
+<body>
+   
+
+<!-- =========================
+HEADER
+========================= -->
+<header class="mobile-header">
+
+    <div>
+        <h2>🏥 Andelipa Disease Checker Tool</h2>
+        <p>Welcome, <span class="username">{{ user }}</span></p>
+    </div>
+
+    <div>
+        <a href="/logout">
+            <button class="logout-btn">Logout</button>
+        </a>
+    </div>
+
+</header>
+
+<!-- =========================
+MAIN CONTAINER
+========================= -->
+<div class="container">
+
+    <!-- =========================
+    WELCOME DASHBOARD
+    ========================= -->
+    <div class="welcome-dashboard glass-card">
+
+        <div class="welcome-left">
+
+            
+            <p>
+                Select symptoms below or describe your condition.
+                The AI engine will analyze possible diseases,
+                risk levels and medical recommendations.
+            </p>
+
+        </div>
+
+        <div class="welcome-right">
+
+            
+
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+    DIAGNOSIS FORM
+    ========================= -->
+    <form method="POST" id="symptom-form">
+
+        <!-- =========================
+        SYMPTOMS SECTION
+        ========================= -->
+        <div class="card glass-card">
+
+            <h2 class="section-title">
+                🩺 Select Symptoms
+            </h2>
+
+            <p class="section-subtitle">
+                Choose symptoms that match your condition
+            </p>
+<!-- SEARCH BAR -->
+<div class="search-box">
+
+    <input
+        type="text"
+        id="symptom-search"
+        placeholder="🔍 Search symptoms..."
+    >
+
+</div>
+            <div class="symptom-grid">
+
+                {% for symptom in all_symptoms %}
+
+                <label class="symptom-box">
+
+                    <input
+                        type="checkbox"
+                        name="symptoms"
+                        value="{{ symptom }}"
+                    >
+
+                    <span>{{ symptom }}</span>
+
+                </label>
+
+                {% endfor %}
+
+            </div>
+
+            <button type="submit" class="diagnose-btn">
+                🧠 Diagnose Disease
+            </button>
+
+        </div>
+
+        <!-- =========================
+        QUICK CHAT SECTION
+        ========================= -->
+        <div class="card glass-card">
+
+            <h2 class="section-title">
+                💬 Quick Symptom Search
+            </h2>
+
+            <p class="section-subtitle">
+                Example: "I have fever and headache"
+            </p>
+
+            <textarea
+                name="chat_input"
+                class="chat-box"
+                placeholder="Describe your symptoms..."
+            ></textarea>
+
+            <button type="submit" class="chat-btn">
+                🔍 Analyze Symptoms
+            </button>
+
+        </div>
+
+        <!-- =========================
+        AI DOCTOR CHAT
+        ========================= -->
+        <div class="card glass-card">
+
+            <h2 class="section-title">
+                🤖 AI Medical Chat
+            </h2>
+
+            <p class="section-subtitle">
+                Ask any health-related question
+            </p>
+
+            <textarea
+                name="ai_question"
+                class="chat-box"
+                placeholder="Ask AI doctor..."
+            ></textarea>
+
+            <button type="submit" class="gpt-btn">
+                💡 Ask AI Doctor
+            </button>
+
+        </div>
+
+    </form>
+<div id="ai-loader" style="display:none; text-align:center; margin-top:20px;">
+
+    <h3>🧠 Processing your request...</h3>
+
+    <p id="percent">0%</p>
+
+    <div style="width:100%; background:#ddd; border-radius:10px;">
+        <div id="bar"
+             style="height:10px; width:0%; background:#1877f2; border-radius:10px;">
+        </div>
+    </div>
+
+</div>
+    <!-- =========================
+    RESULTS SECTION
+    ========================= -->
+    {% if result %}
+
+    <div class="results glass-card">
+
+        <h2 class="section-title">
+            📋 possible results from selected symptoms
+        </h2>
+
+        <div class="result-content">
+
+           <!-- AI TYPING LOADER -->
+<div id="ai-typing" style="display:none;">
+    🧠 AI is analyzing your symptoms
+    <span class="dots"></span>
+</div>
+
+<!-- RESULTS -->
+<div id="result-box" class="result-content">
+<!-- AI PROGRESS LOADER -->
+<div id="ai-loader" style="display:none; text-align:center;">
+
+    <h3>🧠 Processing your request...</h3>
+
+    <div class="bar">
+        <div id="bar-fill"></div>
+    </div>
+
+    <p id="progress-text">0%</p>
+
+</div>
+    {{ result | safe }}
+
+</div>
+    </div>
+
+    {% endif %}
+
+</div>
+
+<!-- =========================
+LOADING SCRIPT
+========================= -->
+<script>
+
+window.onload = function(){
+
+    let loader = document.getElementById("top-loader");
+
+    loader.style.width = "100%";
+
+    setTimeout(function(){
+
+        loader.style.display = "none";
+
+    }, 5000);
+
+}
+
+</script>
+<script>
+
+window.onload = function(){
+
+    setTimeout(() => {
+
+        document.getElementById("page-loader").style.display = "none";
+
+    }, 1500);
+
+};
+
+</script>
+<script>
+
+let form = document.querySelector("form");
+
+form.addEventListener("submit", function(e){
+
+    let loader = document.getElementById("ai-loader");
+    let text = document.getElementById("loader-text");
+    let bar = document.getElementById("bar-fill");
+
+    loader.style.display = "flex";
+
+    let progress = 0;
+
+    let interval = setInterval(() => {
+
+        progress += 2;
+
+        text.innerText = progress + "%";
+        bar.style.width = progress + "%";
+
+        if(progress >= 100){
+            clearInterval(interval);
+        }
+
+    }, 80); // ~4 seconds total
+
+});
+
+</script>
+<script>
+
+// Start loader when page loads
+window.addEventListener("load", function(){
+
+    let bar = document.getElementById("top-loader");
+
+    let progress = 0;
+
+    let interval = setInterval(() => {
+
+        progress += 5;
+        bar.style.width = progress + "%";
+
+        if(progress >= 100){
+            clearInterval(interval);
+
+            // hide after loading complete
+            setTimeout(() => {
+                bar.style.opacity = "0";
+            }, 300);
+
+        }
+
+    }, 50);
+
+});
+
+</script>
+<script>
+
+document.getElementById("symptom-form").addEventListener("submit", function(){
+
+    let bar = document.getElementById("top-loader");
+
+    bar.style.opacity = "1";
+    bar.style.width = "0%";
+
+    let progress = 0;
+
+    let interval = setInterval(() => {
+
+        progress += 10;
+        bar.style.width = progress + "%";
+
+        if(progress >= 100){
+            clearInterval(interval);
+        }
+
+    }, 100);
+
+});
+
+</script>
+<script>
+
+document.querySelector("form").addEventListener("submit", function () {
+
+    let loader = document.getElementById("ai-loader");
+    let bar = document.getElementById("bar");
+    let percent = document.getElementById("percent");
+
+    loader.style.display = "block";
+
+    let progress = 0;
+
+    let interval = setInterval(() => {
+
+        progress += 5;
+
+        bar.style.width = progress + "%";
+        percent.innerText = progress + "% Processing your request...";
+
+        if (progress >= 100) {
+            clearInterval(interval);
+        }
+
+    }, 200); // 0 → 100 in 4 seconds
+
+});
+
+</script>
+</body>
+<script>
+
+document.getElementById("symptom-form").addEventListener("submit", function (e) {
+
+    e.preventDefault();
+
+    // 🔊 PLAY SOUND
+    let audio = document.getElementById("scan-sound");
+audio.currentTime = 0;
+audio.play();
+    document.getElementById("scan-sound").play();
+
+    let loader = document.getElementById("ai-loader");
+    let bar = document.getElementById("bar");
+    let percent = document.getElementById("percent");
+
+    loader.style.display = "block";
+
+    let progress = 0;
+
+    let interval = setInterval(() => {
+
+        progress += 5;
+
+        bar.style.width = progress + "%";
+        percent.innerText = progress + "% Processing your request...";
+
+        if (progress >= 100) {
+            clearInterval(interval);
+            document.getElementById("symptom-form").submit();
+        }
+
+    }, 200);
+
+});
+</script>
+<script>
+document.querySelector("form").addEventListener("submit", function(){
+
+    let loader = document.getElementById("ai-typing");
+    let result = document.getElementById("result-box");
+
+    // show typing animation
+    loader.style.display = "flex";
+
+    // hide result while processing
+    result.style.display = "none";
+
+});
+</script>
+<script>
+document.querySelector("form").addEventListener("submit", function () {
+
+    // show AI typing loader
+    document.getElementById("ai-typing").style.display = "flex";
+
+    // hide results immediately
+    document.getElementById("result-box").style.display = "none";
+
+});
+</script>
+<script>
+
+document.querySelector("form").addEventListener("submit", function () {
+
+    let loader = document.getElementById("ai-loader");
+    let bar = document.getElementById("bar-fill");
+    let text = document.getElementById("progress-text");
+
+    let result = document.getElementById("result-box");
+
+    // show loader
+    loader.style.display = "block";
+
+    // hide result
+    result.style.display = "none";
+
+    // start progress
+    let progress = 0;
+
+    let interval = setInterval(() => {
+
+        progress += 2; // speed control
+
+        bar.style.width = progress + "%";
+        text.innerText = progress + "%";
+
+        if (progress >= 100) {
+            clearInterval(interval);
+        }
+
+    }, 60);
+
+});
+
+</script>
+</body>
+</html>
